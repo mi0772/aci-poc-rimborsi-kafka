@@ -22,7 +22,7 @@ public class SendMessageASyncThread {
     @Value("${app.kafka.topic-name}")
     private String topicName;
 
-    private RimborsoOutBoxRepository rimborsoOutBoxRepository;
+    private final RimborsoOutBoxRepository rimborsoOutBoxRepository;
     private final KafkaTemplate<String, String> kafkaTemplate;
 
     @Autowired

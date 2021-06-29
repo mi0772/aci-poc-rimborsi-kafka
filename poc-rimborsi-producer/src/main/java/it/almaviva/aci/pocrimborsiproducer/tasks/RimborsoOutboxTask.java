@@ -11,18 +11,18 @@ import org.springframework.stereotype.Component;
 public class RimborsoOutboxTask {
 
     private final RimborsoOutBoxRepository rimborsoOutBoxRepository;
-    private final SendMessageASyncThread sendMessageAndUpdateState;
+    private final SendMessageASyncThread asyncThread;
 
     @Autowired
-    public RimborsoOutboxTask(RimborsoOutBoxRepository rimborsoOutBoxRepository, SendMessageASyncThread sendMessageAndUpdateState) {
+    public RimborsoOutboxTask(RimborsoOutBoxRepository rimborsoOutBoxRepository, SendMessageASyncThread asyncThread) {
         this.rimborsoOutBoxRepository = rimborsoOutBoxRepository;
-        this.sendMessageAndUpdateState = sendMessageAndUpdateState;
+        this.asyncThread = asyncThread;
     }
 
     @Scheduled(fixedDelayString = "${app.task.delay:5000}")
     public void processOutBox() {
         log.info("query outbox per invio evento a kafka");
-        this.rimborsoOutBoxRepository.findByStato(0).forEach(sendMessageAndUpdateState::sendMessageAndUpdateState);
+        this.rimborsoOutBoxRepository.findByStato(0).forEach(asyncThread::sendMessageAndUpdateState);
         log.info("fine");
     }
 }
