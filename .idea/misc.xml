@@ -5,6 +5,7 @@
       <list>
         <option value="$PROJECT_DIR$/poc-rimborsi-producer/pom.xml" />
         <option value="$PROJECT_DIR$/poc-rimborsi-outbox-task/pom.xml" />
+        <option value="$PROJECT_DIR$/poc-rimborsi-consumer/pom.xml" />
       </list>
     </option>
   </component>

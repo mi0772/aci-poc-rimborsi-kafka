@@ -7,17 +7,20 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="poc-rimborsi-consumer" />
         <module name="poc-rimborsi-producer" />
         <module name="poc-rimborsi-outbox-task" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="poc-rimborsi-consumer" target="11" />
       <module name="poc-rimborsi-outbox-task" target="11" />
       <module name="poc-rimborsi-producer" target="11" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="poc-rimborsi-consumer" options="-parameters" />
       <module name="poc-rimborsi-outbox-task" options="-parameters" />
       <module name="poc-rimborsi-producer" options="-parameters" />
     </option>
