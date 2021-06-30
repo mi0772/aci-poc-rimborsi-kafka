@@ -15,6 +15,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.concurrent.ListenableFuture;
 import org.springframework.util.concurrent.ListenableFutureCallback;
 
+import java.util.UUID;
+
 @Component
 @Slf4j
 public class SendMessageASyncThread {
@@ -36,7 +38,14 @@ public class SendMessageASyncThread {
         try {
             log.info("invio messaggio : {}", rimborso);
             var r = new RimborsoDTO(rimborso.getRimborso().getCodiceFiscaleDestinatario(), rimborso.getRimborso().getNominativoDestinatario(),rimborso.getRimborso().getImporto());
-            this.sendMessage(new Gson().toJson(r), topicName);
+
+            var messageKey = String.format("K_%d", rimborso.getRimborso().getId());
+
+            this.sendMessage(new Gson().toJson(r), topicName, messageKey);
+
+            //TODO: Ne mando 2 per provare l'idemponence
+            this.sendMessage(new Gson().toJson(r), topicName, messageKey);
+
             this.rimborsoOutBoxRepository.delete(rimborso);
         }
         catch (UndeliverableKafkaMessage e) {
@@ -44,9 +53,9 @@ public class SendMessageASyncThread {
         }
     }
 
-    private void sendMessage(String rimborso, String topicName) {
+    private void sendMessage(String rimborso, String topicName, String messageKey) {
 
-        ListenableFuture<SendResult<String, String>> future = kafkaTemplate.send(topicName, rimborso);
+        ListenableFuture<SendResult<String, String>> future = kafkaTemplate.send(topicName, messageKey, rimborso);
 
         future.addCallback(new ListenableFutureCallback<>() {
 

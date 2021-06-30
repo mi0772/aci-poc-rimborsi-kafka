@@ -1,1 +1,26 @@
+server:
+  port: 8082
 
+camel:
+  springboot:
+    main-run-controller: true
+    tracing: false
+    backlog-tracing: false
+    use-breadcrumb: false
+
+kafka:
+  server : internal-aba611ee2c58942ffa043f5d334907c8-1962393769.eu-west-1.elb.amazonaws.com
+  port : 9094
+  topic : rimborsi
+  channel : 8
+  auto.offset.reset: earliest
+  idemponent-topid: rimborsi-idempotent
+
+spring:
+  kafka:
+    bootstrap-servers: internal-aba611ee2c58942ffa043f5d334907c8-1962393769.eu-west-1.elb.amazonaws.com:9094
+    consumer:
+      group-id: 9
+      enable-auto-commit: false
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
