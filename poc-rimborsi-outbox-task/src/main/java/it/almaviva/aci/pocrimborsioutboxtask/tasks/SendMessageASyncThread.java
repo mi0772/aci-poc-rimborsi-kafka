@@ -1,10 +1,10 @@
-package it.almaviva.aci.pocrimborsiproducer.tasks;
+package it.almaviva.aci.pocrimborsioutboxtask.tasks;
 
 import com.google.gson.Gson;
-import it.almaviva.aci.pocrimborsiproducer.domain.RimborsoOutBox;
-import it.almaviva.aci.pocrimborsiproducer.exception.UndeliverableKafkaMessage;
-import it.almaviva.aci.pocrimborsiproducer.model.RimborsoDTO;
-import it.almaviva.aci.pocrimborsiproducer.repository.RimborsoOutBoxRepository;
+import it.almaviva.aci.pocrimborsioutboxtask.domain.RimborsoOutBox;
+import it.almaviva.aci.pocrimborsioutboxtask.exception.UndeliverableKafkaMessage;
+import it.almaviva.aci.pocrimborsioutboxtask.model.RimborsoDTO;
+import it.almaviva.aci.pocrimborsioutboxtask.repository.RimborsoOutBoxRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -37,8 +37,7 @@ public class SendMessageASyncThread {
             log.info("invio messaggio : {}", rimborso);
             var r = new RimborsoDTO(rimborso.getRimborso().getCodiceFiscaleDestinatario(), rimborso.getRimborso().getNominativoDestinatario(),rimborso.getRimborso().getImporto());
             this.sendMessage(new Gson().toJson(r), topicName);
-            rimborso.setStato(10);
-            this.rimborsoOutBoxRepository.save(rimborso);
+            this.rimborsoOutBoxRepository.delete(rimborso);
         }
         catch (UndeliverableKafkaMessage e) {
             log.warn("rimborso : {} non inviato", rimborso);

@@ -7,5 +7,4 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface RimborsoOutBoxRepository extends JpaRepository<RimborsoOutBox, Integer> {
-    List<RimborsoOutBox> findByStato(@Param("stato") Integer stato);
 }

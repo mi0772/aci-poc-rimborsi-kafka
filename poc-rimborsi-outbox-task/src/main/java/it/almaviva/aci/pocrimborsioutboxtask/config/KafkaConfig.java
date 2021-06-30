@@ -1,4 +1,4 @@
-package it.almaviva.aci.pocrimborsiproducer.config;
+package it.almaviva.aci.pocrimborsioutboxtask.config;
 
 
 import org.apache.kafka.clients.admin.AdminClientConfig;

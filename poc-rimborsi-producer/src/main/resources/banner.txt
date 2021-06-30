@@ -1,0 +1,6 @@
+=============================================================================
+= POC - RIMBORSI API
+= espone un metodo post per la creazione di un rimborso da inviare su
+= kafka tramite pattern outbox
+=============================================================================
+

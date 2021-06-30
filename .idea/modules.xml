@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/poc-rimborsi-outbox-task/poc-rimborsi-outbox-task.iml" filepath="$PROJECT_DIR$/poc-rimborsi-outbox-task/poc-rimborsi-outbox-task.iml" />
       <module fileurl="file://$PROJECT_DIR$/poc-rimborsi-producer/poc-rimborsi-producer.iml" filepath="$PROJECT_DIR$/poc-rimborsi-producer/poc-rimborsi-producer.iml" />
     </modules>
   </component>

@@ -12,12 +12,3 @@ spring:
   sql:
     init:
       platform: postgres
-  kafka:
-    producer:
-      bootstrap-servers: internal-aba611ee2c58942ffa043f5d334907c8-1962393769.eu-west-1.elb.amazonaws.com:9094
-      key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.apache.kafka.common.serialization.StringSerializer
-app:
-  kafka:
-    topic-name: rimborsi
-  async-pool-size: 10

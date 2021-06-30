@@ -1,4 +1,4 @@
-package it.almaviva.aci.pocrimborsiproducer.config;
+package it.almaviva.aci.pocrimborsioutboxtask.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;

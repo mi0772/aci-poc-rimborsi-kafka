@@ -1,0 +1,25 @@
+spring:
+  application:
+    name: poc-rimborsi-outbox-task
+  datasource:
+    hikari:
+      connection-timeout: 20000
+      maximum-pool-size: 2
+    url: jdbc:postgresql://internal-aa715dcc4c9204fbdb784093946259c3-972620278.eu-west-1.elb.amazonaws.com:5432/nart_anag
+    username: exp
+    password: exp
+    driverClassName: org.postgresql.Driver
+  sql:
+    init:
+      platform: postgres
+  kafka:
+    producer:
+      bootstrap-servers: internal-aba611ee2c58942ffa043f5d334907c8-1962393769.eu-west-1.elb.amazonaws.com:9094
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+app:
+  kafka:
+    topic-name: rimborsi
+  async-pool-size: 10
+server:
+  port: 8081
