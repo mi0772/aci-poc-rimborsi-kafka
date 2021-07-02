@@ -22,7 +22,11 @@ public class RimborsoOutboxTask {
     @Scheduled(fixedDelayString = "${app.task.delay:5000}")
     public void processOutBox() {
         log.info("query outbox per invio evento a kafka");
-        this.rimborsoOutBoxRepository.findAll().forEach(aSyncThread::sendMessageAndUpdateState);
+
+        this.rimborsoOutBoxRepository
+                .findAll()
+                .forEach(aSyncThread::sendMessageAndUpdateState);
+
         log.info("fine");
     }
 }

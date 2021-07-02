@@ -12,13 +12,34 @@ spring:
   sql:
     init:
       platform: postgres
-  kafka:
-    producer:
-      bootstrap-servers: internal-aba611ee2c58942ffa043f5d334907c8-1962393769.eu-west-1.elb.amazonaws.com:9094
-      key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.apache.kafka.common.serialization.StringSerializer
-      properties:
-        enable.idempotence: true
+
+  cloud:
+    stream:
+      bindings:
+        output:
+          destination: rimborsi
+          binder: kafka1
+      binders:
+        kafka1:
+          type: kafka
+          environment:
+            spring:
+              cloud:
+                stream:
+                  kafka:
+                    binder:
+                      brokers: internal-aba611ee2c58942ffa043f5d334907c8-1962393769.eu-west-1.elb.amazonaws.com:9094
+
+    kafka:
+      admin:
+        fail-fast: true
+        properties:
+          request.timeout.ms: 10000
+          retries: 0
+
+      listener:
+        poll-timeout: 1000
+
 app:
   kafka:
     topic-name: rimborsi
