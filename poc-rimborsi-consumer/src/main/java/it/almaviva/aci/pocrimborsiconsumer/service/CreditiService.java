@@ -33,7 +33,7 @@ public class CreditiService {
     private void generateCustomException() throws CustomException {
         var rand = new Random();
 
-        if (rand.nextInt(10) < 5) {
+        if (rand.nextInt(10) < 3) {
             throw new CustomException("Errore applicativo");
         }
     }

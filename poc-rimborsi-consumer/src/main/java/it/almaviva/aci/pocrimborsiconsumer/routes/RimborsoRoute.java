@@ -1,19 +1,18 @@
 package it.almaviva.aci.pocrimborsiconsumer.routes;
 
 import com.google.gson.Gson;
+import it.almaviva.aci.pocrimborsiconsumer.config.KafkaProperties;
 import it.almaviva.aci.pocrimborsiconsumer.exceptions.CustomException;
 import it.almaviva.aci.pocrimborsiconsumer.model.RimborsoDTO;
 import it.almaviva.aci.pocrimborsiconsumer.service.CreditiService;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.camel.CamelContext;
-import org.apache.camel.Exchange;
-import org.apache.camel.LoggingLevel;
-import org.apache.camel.RuntimeCamelException;
+import org.apache.camel.*;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.kafka.KafkaConstants;
 import org.apache.camel.component.kafka.KafkaManualCommit;
 import org.apache.camel.processor.idempotent.kafka.KafkaIdempotentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -37,14 +36,32 @@ public class RimborsoRoute extends RouteBuilder {
     @Autowired
     private CreditiService service;
 
+    @Autowired
+    private KafkaProperties kafkaProps;
+
+    @Autowired
+    Processor evaluateExceptionProcessor;
+
+    @Autowired
+    private Processor kafkaOffsetManagerProcessor;
+
     @Override
     public void configure() throws Exception {
 
         KafkaIdempotentRepository kafkaIdempotentRepository = new KafkaIdempotentRepository(idemponentTopic, kafkaBroker+":"+kafkaPort);
 
+        String kafkaUrl = kafkaProps.buildKafkaUrl();
+        log.info("building camel route to consume from kafka: {}", kafkaUrl);
+
+        onException(Exception.class)
+                .handled(false)
+                .process(evaluateExceptionProcessor)
+                .log(LoggingLevel.WARN, "errore di sistema: ${exception.message}");
 
 
-        from("kafka:{{kafka.topic}}?brokers={{kafka.server}}:{{kafka.port}}&groupId={{kafka.channel}}&autoOffsetReset=earliest&autoCommitEnable=false&allowManualCommit=true")
+        //from(kafkaUrl)
+        //from("kafka:{{kafka.topic}}?brokers={{kafka.server}}:{{kafka.port}}&groupId={{kafka.channel}}&autoOffsetReset=earliest&autoCommitEnable=false&allowManualCommit=true")
+        from(kafkaUrl)
                 .idempotentConsumer(header("kafka.KEY"), kafkaIdempotentRepository)
                 .eager(false)
                 .removeOnFailure(true)
@@ -57,19 +74,16 @@ public class RimborsoRoute extends RouteBuilder {
 
                         exchange.getIn().getHeader(KafkaConstants.MANUAL_COMMIT, KafkaManualCommit.class).commitSync();
                     })
+                    .process(kafkaOffsetManagerProcessor)
                 .doCatch(CustomException.class)
-                    .process(exchange -> {
-                        log.info("Exception applicativa, eseguo la commit del messaggio");
-                        exchange.getIn().getHeader(KafkaConstants.MANUAL_COMMIT, KafkaManualCommit.class).commitSync();
+                    .process(new Processor() {
+                        @Override
+                        public void process(Exchange exchange) throws Exception {
+                            log.info("errore applicativo, eseguo la commit del messaggio");
+                            exchange.getIn().getHeader(KafkaConstants.MANUAL_COMMIT, KafkaManualCommit.class).commitSync();
+                        }
                     })
-                .doCatch(RuntimeCamelException.class)
-                    .process(exchange -> {
-                        log.info("Exception di camel ... non eseguo la commit");
-                    })
-                .doCatch(Exception.class)
-                    .process(exchange -> {
-                        log.info("Exception di sistema, non eseguo la commit del messaggio");
-                    })
+                .log("fine")
         ;
     }
 }
