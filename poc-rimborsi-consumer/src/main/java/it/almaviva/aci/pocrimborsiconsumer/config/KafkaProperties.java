@@ -8,26 +8,39 @@ public class KafkaProperties {
 
     @Value("${kafka.consumer.group}")
     private String consumerGroupId;
+
     @Value("${kafka.topic}")
     private String topic;
+
     @Value("${kafka.host}")
     private String hostWithPort;
+
     @Value("${kafka.consumer.seekTo}")
     private String seekTo;
+
     @Value("${kafka.consumer.maxPollRecords}")
     private Integer maxPollRecords;
+
     @Value("${kafka.consumer.consumerCount}")
     private Integer consumerCount;
+
     @Value("${kafka.consumer.autoOffsetReset}")
     private String autoOffsetReset;
+
     @Value("${kafka.consumer.autoCommitEnable}")
     private Boolean autoCommitEnable;
+
     @Value("${kafka.consumer.allowManualCommit}")
     private Boolean allowManualCommit;
+
     @Value("${kafka.consumer.breakOnFirstError}")
     private Boolean breakOnFirstError;
+
     @Value("${kafka.endpointPrefix}")
     private String endPointPrefix;
+
+    @Value("${kafka.idemponent-topic-id}")
+    private String idempotentTopicId;
 
     public String buildKafkaUrl() {
         StringBuilder sb = new StringBuilder();
@@ -48,4 +61,11 @@ public class KafkaProperties {
         return sb.toString();
     }
 
+    public String getHostWithPort() {
+        return hostWithPort;
+    }
+
+    public String getIdempotentTopicId() {
+        return idempotentTopicId;
+    }
 }

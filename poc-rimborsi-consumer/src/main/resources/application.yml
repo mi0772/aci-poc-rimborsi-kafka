@@ -10,12 +10,10 @@ camel:
 
 kafka:
   host: internal-aba611ee2c58942ffa043f5d334907c8-1962393769.eu-west-1.elb.amazonaws.com:9094
-  server: internal-aba611ee2c58942ffa043f5d334907c8-1962393769.eu-west-1.elb.amazonaws.com
-  port: 9094
   topic: rimborsi
   channel: 8
   auto.offset.reset: earliest
-  idemponent-topid: rimborsi-idempotent
+  idemponent-topic-id: rimborsi-idempotent
   endpointPrefix: 'kafka:'
   consumer:
     seekTo:
